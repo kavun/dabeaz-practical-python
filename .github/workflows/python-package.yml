@@ -32,7 +32,7 @@ jobs:
     - name: Lint with ruff
       working-directory: Work
       run: |
-        ruff
+        ruff check .
     - name: Test with pytest
       working-directory: Work
       run: |
