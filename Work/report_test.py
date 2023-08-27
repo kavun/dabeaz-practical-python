@@ -1,8 +1,8 @@
 from os import path
 from report import (
     read_portfolio_2_4,
-    read_portfolio_2_5,
-    read_prices_2_6,
+    read_portfolio,
+    read_prices,
     get_gainloss_2_7,
 )
 
@@ -23,7 +23,7 @@ def test_read_portfolio_2_4():
 
 
 def test_read_portfolio_2_5():
-    portfolio = read_portfolio_2_5(path.join(data_dir, "portfolio.csv"))
+    portfolio = read_portfolio(path.join(data_dir, "portfolio.csv"))
     assert portfolio == [
         {"name": "AA", "shares": 100, "price": 32.2},
         {"name": "IBM", "shares": 50, "price": 91.1},
@@ -36,7 +36,7 @@ def test_read_portfolio_2_5():
 
 
 def test_read_prices_2_6():
-    prices = dict(read_prices_2_6(path.join(data_dir, "prices.csv")))
+    prices = dict(read_prices(path.join(data_dir, "prices.csv")))
     assert prices["AA"] == 9.22
     assert prices["AXP"] == 24.85
     assert prices["IBM"] == 106.28

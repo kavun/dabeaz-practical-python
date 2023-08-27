@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # report.py
 #
 # Exercise 2.4
@@ -20,19 +21,19 @@ def read_portfolio_2_4(filename):
     return portfolio
 
 
-def read_portfolio_2_5(filename):
+def read_portfolio(filename):
     return parse_csv(
         filename, select=["name", "shares", "price"], types=[str, int, float]
     )
 
 
-def read_prices_2_6(filename):
+def read_prices(filename):
     return parse_csv(filename, types=[str, float], has_headers=False)
 
 
 def get_gainloss_2_7(stocksFilename, pricesFilename):
-    stocks = read_portfolio_2_5(stocksFilename)
-    prices = dict(read_prices_2_6(pricesFilename))
+    stocks = read_portfolio(stocksFilename)
+    prices = dict(read_prices(pricesFilename))
 
     total_value = 0.0
     total_market_value = 0.0
@@ -52,7 +53,7 @@ def get_gainloss_2_7(stocksFilename, pricesFilename):
     return (total_gain, stocks)
 
 
-def make_report_2_9(stocksFilename, pricesFilename):
+def make_report(stocksFilename, pricesFilename):
     (_, stocks) = get_gainloss_2_7(stocksFilename, pricesFilename)
 
     print()
@@ -62,3 +63,16 @@ def make_report_2_9(stocksFilename, pricesFilename):
     for stock in stocks:
         (name, shares, price, change, _, _, _) = stock.values()
         print(f"{name:>10s} {shares:>10d} {usd(price):>10s} {usd(change):>10s}")
+
+
+def main(argv):
+    if len(argv) != 3:
+        raise SystemExit(f"Usage: {argv[0]} portfolio prices")
+
+    make_report(argv[1], argv[2])
+
+
+if __name__ == "__main__":
+    import sys
+
+    main(sys.argv)
