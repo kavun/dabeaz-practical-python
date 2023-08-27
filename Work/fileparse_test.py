@@ -111,10 +111,12 @@ Row 7: Reason invalid literal for int() with base 10: ''
     ]
 
 
-def test_parse_csv_silence_errors_3_10():
+def test_parse_csv_silence_errors_3_10(capsys):
     portfolio = parse_csv(
         "Data/missing.csv", types=[str, int, float], silence_errors=True
     )
+    captured = capsys.readouterr()
+    assert captured.out == ""
     assert portfolio == [
         {"price": 32.2, "name": "AA", "shares": 100},
         {"price": 91.1, "name": "IBM", "shares": 50},
