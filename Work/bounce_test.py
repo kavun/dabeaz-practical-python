@@ -1,10 +1,13 @@
 from bounce import bounce
 
+
 def test_main(capfd):
     bounce()
-    
+
     out, err = capfd.readouterr()
-    assert out == """1 60.0
+    assert (
+        out
+        == """1 60.0
 2 36.0
 3 21.6
 4 12.96
@@ -15,3 +18,4 @@ def test_main(capfd):
 9 1.0078
 10 0.6047
 """
+    )

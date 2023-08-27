@@ -9,7 +9,7 @@ print()
 if len(sys.argv) > 1:
     filename = sys.argv[1]
 else:
-    filename = 'Data/portfolio.csv'
+    filename = "Data/portfolio.csv"
 
 cost = pcost(filename)
-print(f'Total cost ${cost:,.2f}')
+print(f"Total cost ${cost:,.2f}")
