@@ -4,7 +4,7 @@
 # Exercise 2.4
 import csv
 from currency import usd
-from fileparse import parse_csv
+from fileparse import parse_csv, parse_lines
 
 
 def read_portfolio_2_4(filename):
@@ -22,13 +22,15 @@ def read_portfolio_2_4(filename):
 
 
 def read_portfolio(filename):
-    return parse_csv(
-        filename, select=["name", "shares", "price"], types=[str, int, float]
-    )
+    with open(filename) as f:
+        return parse_lines(
+            f, select=["name", "shares", "price"], types=[str, int, float]
+        )
 
 
 def read_prices(filename):
-    return parse_csv(filename, types=[str, float], has_headers=False)
+    with open(filename) as f:
+        return parse_lines(f, types=[str, float], has_headers=False)
 
 
 def get_gainloss_2_7(stocksFilename, pricesFilename):

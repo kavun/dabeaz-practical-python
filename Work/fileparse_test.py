@@ -1,5 +1,5 @@
 import pytest
-from fileparse import parse_csv
+from fileparse import parse_csv, parse_lines
 
 
 def test_parse_csv_select_3_4():
@@ -123,4 +123,30 @@ def test_parse_csv_silence_errors_3_10(capsys):
         {"price": 83.44, "name": "CAT", "shares": 150},
         {"price": 40.37, "name": "GE", "shares": 95},
         {"price": 65.1, "name": "MSFT", "shares": 50},
+    ]
+
+
+def test_file_parse_lines():
+    import gzip
+
+    with gzip.open("Data/portfolio.csv.gz", "rt") as file:
+        port = parse_lines(file, types=[str, int, float])
+        assert port == [
+            {"name": "AA", "shares": 100, "price": 32.2},
+            {"name": "IBM", "shares": 50, "price": 91.1},
+            {"name": "CAT", "shares": 150, "price": 83.44},
+            {"name": "MSFT", "shares": 200, "price": 51.23},
+            {"name": "GE", "shares": 95, "price": 40.37},
+            {"name": "MSFT", "shares": 50, "price": 65.1},
+            {"name": "IBM", "shares": 100, "price": 70.44},
+        ]
+
+
+def test_file_parse_lines_custom():
+    lines = ["name,shares,price", "AA,100,34.23", "IBM,50,91.1", "HPE,75,45.1"]
+    port = parse_lines(lines, types=[str, int, float])
+    assert port == [
+        {"name": "AA", "shares": 100, "price": 34.23},
+        {"name": "IBM", "shares": 50, "price": 91.1},
+        {"name": "HPE", "shares": 75, "price": 45.1},
     ]
