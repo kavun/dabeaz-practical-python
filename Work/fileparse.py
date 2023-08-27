@@ -23,7 +23,7 @@ def parse_csv(
         if has_headers:
             orig_headers = next(rows)
             headers = select if select else orig_headers
-            indices = [headers.index(name) for name in headers]
+            indices = [orig_headers.index(name) for name in headers]
         records = []
         for row_num, orig_row in enumerate(rows):
             if not orig_row:

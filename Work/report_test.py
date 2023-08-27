@@ -8,6 +8,7 @@ from report import (
 
 data_dir = path.join(path.dirname(__file__), "Data")
 
+
 def test_read_portfolio_2_4():
     portfolio = read_portfolio_2_4(path.join(data_dir, "portfolio.csv"))
     assert portfolio == [
@@ -35,7 +36,7 @@ def test_read_portfolio_2_5():
 
 
 def test_read_prices_2_6():
-    prices = read_prices_2_6(path.join(data_dir, "prices.csv"))
+    prices = dict(read_prices_2_6(path.join(data_dir, "prices.csv")))
     assert prices["AA"] == 9.22
     assert prices["AXP"] == 24.85
     assert prices["IBM"] == 106.28
