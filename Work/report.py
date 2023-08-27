@@ -4,7 +4,7 @@
 # Exercise 2.4
 import csv
 from currency import usd
-from fileparse import parse_csv, parse_lines
+from fileparse import parse_lines
 
 
 def read_portfolio_2_4(filename):
