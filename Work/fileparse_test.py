@@ -1,3 +1,4 @@
+import pytest
 from fileparse import parse_csv
 
 
@@ -74,11 +75,50 @@ def test_parse_csv_no_headers_3_6():
 
 def test_parse_csv_delimiter_3_7():
     assert parse_csv("Data/portfolio.dat", types=[str, int, float], delimiter=" ") == [
-        { "name": "AA", "shares": 100, "price": 32.2 },
-        { "name": "IBM", "shares": 50, "price": 91.1 },
-        { "name": "CAT", "shares": 150, "price": 83.44 },
-        { "name": "MSFT", "shares": 200, "price": 51.23 },
-        { "name": "GE", "shares": 95, "price": 40.37 },
-        { "name": "MSFT", "shares": 50, "price": 65.1 },
-        { "name": "IBM", "shares": 100, "price": 70.44 },
+        {"name": "AA", "shares": 100, "price": 32.2},
+        {"name": "IBM", "shares": 50, "price": 91.1},
+        {"name": "CAT", "shares": 150, "price": 83.44},
+        {"name": "MSFT", "shares": 200, "price": 51.23},
+        {"name": "GE", "shares": 95, "price": 40.37},
+        {"name": "MSFT", "shares": 50, "price": 65.1},
+        {"name": "IBM", "shares": 100, "price": 70.44},
+    ]
+
+
+def test_parse_csv_exception_3_8():
+    with pytest.raises(RuntimeError) as e:
+        parse_csv("Data/prices.csv", select=["name", "price"], has_headers=False)
+        assert e == "select argument requires column headers"
+
+
+def test_parse_csv_valueerrors_3_9(capsys):
+    portfolio = parse_csv("Data/missing.csv", types=[str, int, float])
+    captured = capsys.readouterr()
+    assert (
+        captured.out
+        == """Row 4: Couldn't convert ['MSFT', '', '51.23']
+Row 4: Reason invalid literal for int() with base 10: ''
+Row 7: Couldn't convert ['IBM', '', '70.44']
+Row 7: Reason invalid literal for int() with base 10: ''
+"""
+    )
+    assert portfolio == [
+        {"price": 32.2, "name": "AA", "shares": 100},
+        {"price": 91.1, "name": "IBM", "shares": 50},
+        {"price": 83.44, "name": "CAT", "shares": 150},
+        {"price": 40.37, "name": "GE", "shares": 95},
+        {"price": 65.1, "name": "MSFT", "shares": 50},
+    ]
+
+
+def test_parse_csv_silence_errors_3_10():
+    portfolio = parse_csv(
+        "Data/missing.csv", types=[str, int, float], silence_errors=True
+    )
+    assert portfolio == [
+        {"price": 32.2, "name": "AA", "shares": 100},
+        {"price": 91.1, "name": "IBM", "shares": 50},
+        {"price": 83.44, "name": "CAT", "shares": 150},
+        {"price": 40.37, "name": "GE", "shares": 95},
+        {"price": 65.1, "name": "MSFT", "shares": 50},
     ]
