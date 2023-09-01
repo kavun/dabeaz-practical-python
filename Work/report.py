@@ -2,7 +2,6 @@
 # report.py
 #
 # Exercise 2.4
-import csv
 from currency import usd
 from fileparse import parse_lines
 from stock import Stock
@@ -51,7 +50,10 @@ def make_report(stocksFilename, pricesFilename):
 
     for stock in stocks:
         print(
-            f"{stock.name:>10s} {stock.shares:>10d} {usd(stock.price):>10s} {usd(prices[stock.name] - stock.price):>10s}"
+            f"{stock.name:>10s} "
+            + f"{stock.shares:>10d} "
+            + f"{usd(stock.price):>10s} "
+            + f"{usd(prices[stock.name] - stock.price):>10s}"
         )
 
 
