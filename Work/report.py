@@ -5,27 +5,17 @@
 import csv
 from currency import usd
 from fileparse import parse_lines
-
-
-def read_portfolio_2_4(filename):
-    portfolio = []
-    with open(filename, "rt") as f:
-        rows = csv.reader(f)
-        next(rows)  # skip header
-        for fields in rows:
-            try:
-                holding = (fields[0], int(fields[1]), float(fields[2]))
-                portfolio.append(holding)
-            except ValueError:
-                print(f"Could not parse {fields}")
-    return portfolio
+from stock import Stock
 
 
 def read_portfolio(filename):
     with open(filename) as f:
-        return parse_lines(
-            f, select=["name", "shares", "price"], types=[str, int, float]
-        )
+        return [
+            Stock(n["name"], n["shares"], n["price"])
+            for n in parse_lines(
+                f, select=["name", "shares", "price"], types=[str, int, float]
+            )
+        ]
 
 
 def read_prices(filename):
@@ -42,29 +32,27 @@ def get_gainloss_2_7(stocksFilename, pricesFilename):
     total_gain = 0.0
 
     for stock in stocks:
-        market_price = prices[stock["name"]]
-        stock["change"] = market_price - stock["price"]
-        stock["current_value"] = stock["price"] * stock["shares"]
-        stock["market_value"] = market_price * stock["shares"]
-        stock["value_gain"] = stock["market_value"] - stock["current_value"]
+        market_price = prices[stock.name]
+        market_value = market_price * stock.shares
+        value_gain = market_value - stock.cost()
+        total_value += stock.cost()
+        total_market_value += market_value
+        total_gain += value_gain
 
-        total_value += stock["current_value"]
-        total_market_value += stock["market_value"]
-        total_gain += stock["value_gain"]
-
-    return (total_gain, stocks)
+    return (total_gain, stocks, prices)
 
 
 def make_report(stocksFilename, pricesFilename):
-    (_, stocks) = get_gainloss_2_7(stocksFilename, pricesFilename)
+    (_, stocks, prices) = get_gainloss_2_7(stocksFilename, pricesFilename)
 
     print()
     print(" ".join([f"{h:>10s}" for h in ["Name", "Shares", "Price", "Change"]]))
     print(" ".join(["----------" for _ in range(4)]))
 
     for stock in stocks:
-        (name, shares, price, change, _, _, _) = stock.values()
-        print(f"{name:>10s} {shares:>10d} {usd(price):>10s} {usd(change):>10s}")
+        print(
+            f"{stock.name:>10s} {stock.shares:>10d} {usd(stock.price):>10s} {usd(prices[stock.name] - stock.price):>10s}"
+        )
 
 
 def main(argv):

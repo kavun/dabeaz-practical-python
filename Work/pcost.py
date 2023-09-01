@@ -7,7 +7,7 @@ from report import read_portfolio
 def pcost(filename):
     """Returns the total cost of the portfolio"""
     portfolio = read_portfolio(filename)
-    return sum(map(lambda p: p["shares"] * p["price"], portfolio))
+    return sum(map(lambda p: p.cost(), portfolio))
 
 
 def main(argv):
