@@ -37,13 +37,12 @@ def get_gainloss_2_7(stocksFilename, pricesFilename):
         total_value += stock.cost()
         total_market_value += market_value
         total_gain += value_gain
+        stock.change = market_price - stock.price
 
     return (total_gain, stocks, prices)
 
 
-def make_report(stocksFilename, pricesFilename):
-    (_, stocks, prices) = get_gainloss_2_7(stocksFilename, pricesFilename)
-
+def print_report(stocks):
     print()
     print(" ".join([f"{h:>10s}" for h in ["Name", "Shares", "Price", "Change"]]))
     print(" ".join(["----------" for _ in range(4)]))
@@ -53,15 +52,22 @@ def make_report(stocksFilename, pricesFilename):
             f"{stock.name:>10s} "
             + f"{stock.shares:>10d} "
             + f"{usd(stock.price):>10s} "
-            + f"{usd(prices[stock.name] - stock.price):>10s}"
+            + f"{usd(stock.change):>10s}"
         )
+
+
+def format_report(stocks, formatter):
+    formatter.headings(["Name", "Shares", "Price", "Change"])
+    for stock in stocks:
+        formatter.row([stock.name, stock.shares, usd(stock.price), usd(stock.change)])
 
 
 def main(argv):
     if len(argv) != 3:
         raise SystemExit(f"Usage: {argv[0]} portfolio prices")
 
-    make_report(argv[1], argv[2])
+    _, stocks, _ = get_gainloss_2_7(argv[1], argv[2])
+    print_report(stocks)
 
 
 if __name__ == "__main__":

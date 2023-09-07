@@ -9,3 +9,16 @@ class Stock:
 
     def sell(self, count_shares: int):
         self.shares -= count_shares
+
+
+class MyStock(Stock):
+    def panic(self):
+        self.sell(self.shares)
+
+    def cost(self):
+        return self.factor * super().cost()
+
+    def __init__(self, name, shares, price, factor):
+        super().__init__(name, shares, price)
+        self.factor = factor
+        self.__super__ = super()
